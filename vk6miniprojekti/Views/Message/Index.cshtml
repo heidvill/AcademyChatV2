@@ -1,0 +1,137 @@
+﻿@using System.Linq;
+@using vk6miniprojekti.Models
+@using Microsoft.AspNetCore.Http
+
+@model IEnumerable<vk6miniprojekti.Models.Message>
+
+@{
+    ViewData["Title"] = "Index";
+    AcademyChatContext db = new AcademyChatContext();
+}
+
+
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                From
+            </th>
+            <th>
+                Message
+            </th>
+            <th>
+                Time
+            </th>
+        </tr>
+    </thead>
+    <tbody id="messagesList">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{string q = (from p in db.Person where p.PersonId == item.FromPersonId select p.NickName).FirstOrDefault();
+                    }
+                    @q
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SendTime)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>*@
+@*@if (Context.Session.GetString("Nickname") == null)
+{
+    @Html.ActionLink("Kirjaudu sisään lähettääksesi viestejä", "index", "login")
+}
+else
+{
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-2">User</div>
+            <div class="col-4"><input type="hidden" value="@Context.Session.GetString("Nickname")" id="userInput" /></div>
+        </div>
+        <div class="row">
+            <div class="col-2">Message</div>
+            <div class="col-4"><input type="text" id="messageInput1" /></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">
+                <input type="button" id="sendButton1" value="Send Message" />
+            </div>
+        </div>
+    </div>
+}*@
+
+
+
+
+<html>
+<head>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container">
+        <h3 class=" text-center">Messaging</h3>
+        <div class="messaging">
+            <div class="inbox_msg">
+
+                <div class="mesgs">
+                    <div class="msg_history" id="outgoing">
+                        @foreach (var item in Model)
+                        {
+                            if (item.FromPerson.NickName == Context.Session.GetString("Nickname"))
+                            {
+                                <div class="outgoing_msg">
+                                    <div class="sent_msg">
+                                        <span class="time_date">  @item.SendTime </span>
+                                        <p>@item.MessageText</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="incoming_msg">
+                                    <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                    <div class="received_msg">
+                                        <div class="received_withd_msg">
+                                            <span class="time_date">@item.SendTime </span>
+                                            <span class="time_date">@item.FromPerson.NickName </span>
+                                            <p>@item.MessageText</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+
+                    </div>
+                    <div class="type_msg">
+                        <div class="input_msg_write">
+                            <input type="hidden" value="@Context.Session.GetString("Nickname")" id="userInput" />
+                            <input type="text" class="write_msg" placeholder="Type a message" id="messageInput" />
+                            <button id="sendButton" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+</body>
+</html>
+
